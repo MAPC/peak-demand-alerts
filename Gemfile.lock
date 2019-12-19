@@ -133,7 +133,7 @@ GEM
     normalize-rails (3.0.3)
     pg (0.18.4)
     pkg-config (1.1.7)
-    rack (1.6.4)
+    rack (1.6.12)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.3)

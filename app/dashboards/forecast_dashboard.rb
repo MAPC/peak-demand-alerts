@@ -1,4 +1,6 @@
-require "administrate/base_dashboard"
+# frozen_string_literal: true
+
+require 'administrate/base_dashboard'
 
 class ForecastDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
@@ -22,7 +24,7 @@ class ForecastDashboard < Administrate::BaseDashboard
     risk: Field::String,
     projection: Field::Boolean,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -30,49 +32,48 @@ class ForecastDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :report,
-    :id,
-    :date,
-    :high_temp,
-    :peak_hour,
-    :peak_load,
-    :humidity,
-    :heat_index,
-    :temperature,
-    :actual_peak_hour,
-    :actual_peak_load,
-    :risk,
-    :projection,
-    :created_at,
-    :updated_at,
+  COLLECTION_ATTRIBUTES = %i[
+    report
+    id
+    date
+    high_temp
+    peak_hour
+    peak_load
+    humidity
+    heat_index
+    temperature
+    actual_peak_hour
+    actual_peak_load
+    risk
+    projection
+    created_at
+    updated_at
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :report,
-    :id,
-    :date,
-    :high_temp,
-    :peak_hour,
-    :peak_load,
-    :humidity,
-    :heat_index,
-    :temperature,
-    :actual_peak_hour,
-    :actual_peak_load,
-    :risk,
-    :projection,
-    :created_at,
-    :updated_at,
+  SHOW_PAGE_ATTRIBUTES = %i[
+    report
+    id
+    date
+    high_temp
+    peak_hour
+    peak_load
+    humidity
+    heat_index
+    temperature
+    actual_peak_hour
+    actual_peak_load
+    risk
+    projection
+    created_at
+    updated_at
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-  ].freeze
+  FORM_ATTRIBUTES = [].freeze
 
   # Overwrite this method to customize how forecasts are displayed
   # across all pages of the admin dashboard.

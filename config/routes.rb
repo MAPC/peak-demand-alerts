@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   namespace :admin do
     resources :configurations
     resources :forecasts
     resources :reports
 
-    root to: "configurations#index"
+    root to: 'configurations#index'
   end
 
-  root to: "welcome#index"
+  root to: 'welcome#index'
 
   resources :forecasts
   # The priority is based upon order of creation: first created -> highest priority.

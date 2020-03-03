@@ -1,14 +1,15 @@
-class Forecast < ActiveRecord::Base
+# frozen_string_literal: true
 
-	extend Enumerize
+class Forecast < ActiveRecord::Base
+  extend Enumerize
 
   before_save :set_risk_category
-	belongs_to :report
+  belongs_to :report
 
-	validates :peak_load, presence: true
+  validates :peak_load, presence: true
 
-	enumerize :risk, in: [:unlikely, :possible, :likely, :unknown],
-    default: :unknown
+  enumerize :risk, in: %i[unlikely possible likely unknown],
+                   default: :unknown
 
   def today?
     Time.current.beginning_of_day == date.beginning_of_day
@@ -22,17 +23,16 @@ class Forecast < ActiveRecord::Base
   end
 
   def peak_hour_range
-    start = peak_hour.strftime("%l")
-    finish  = (peak_hour + 1.hour).strftime("%l %p")
-    
-    [start, finish].join(" - ")
+    start = peak_hour.strftime('%l')
+    finish = (peak_hour + 1.hour).strftime('%l %p')
+
+    [start, finish].join(' - ')
   end
 
   def risk_level
-    case
-    when possible.include?(peak_load) then "possible"
-    when peak_load < possible.min     then "unlikely"
-    when peak_load > possible.max     then "likely"
+    if possible.include?(peak_load) then 'possible'
+    elsif peak_load < possible.min     then 'unlikely'
+    elsif peak_load > possible.max     then 'likely'
     end
   end
 
@@ -50,5 +50,4 @@ class Forecast < ActiveRecord::Base
   def set_risk_category
     self.risk = risk_level
   end
-
 end

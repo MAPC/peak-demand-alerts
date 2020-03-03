@@ -1,9 +1,10 @@
-module ApplicationHelper
+# frozen_string_literal: true
 
+module ApplicationHelper
   def cell_style(f)
     str = "background-color: #{risk_background(f)}; color: #{risk_text_color(f)};"
     # str << "border: 4px solid red;" if f.risk_level == 'likely'
-    str << "text-align: center;" if f.today?
+    str << 'text-align: center;' if f.today?
     str
   end
 
@@ -14,7 +15,7 @@ module ApplicationHelper
     unless f.risk_level == 'likely'
       str << "border: #{header_border_size(f)} solid #{risk_color(f)};"
     end
-    str << "text-align: center;"
+    str << 'text-align: center;'
     str
   end
 
@@ -22,7 +23,7 @@ module ApplicationHelper
     str = "color: #{risk_text_color(f)};"
     str << "border-top: #{header_border_size(f)} solid #{risk_color(f)};"
     str << "background-color: #{risk_background(f)};"
-    str << "font-weight: #{ header_font_weight(f) };"
+    str << "font-weight: #{header_font_weight(f)};"
     str
   end
 
@@ -52,7 +53,7 @@ module ApplicationHelper
   end
 
   def risk_box_text_color(f)
-    'white' if %w( likely possible ).include?(f.risk_level)
+    'white' if %w[likely possible].include?(f.risk_level)
   end
 
   def risk_color(f)
@@ -62,5 +63,4 @@ module ApplicationHelper
     when 'unlikely' then 'green'
     end
   end
-
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # All Administrate controllers inherit from this `Admin::ApplicationController`,
 # making it the ideal place to put authentication logic or other
 # before_filters.
@@ -9,10 +11,10 @@ module Admin
     before_filter :authenticate_admin
 
     def authenticate_admin
-      # TODO Add authentication logic here.
+      # TODO: Add authentication logic here.
     end
-    
-    http_basic_authenticate_with name: ENV.fetch("ADMIN_NAME"), password: ENV.fetch("ADMIN_PASSWORD")
+
+    http_basic_authenticate_with name: ENV.fetch('ADMIN_NAME'), password: ENV.fetch('ADMIN_PASSWORD')
 
     # Override this value to specify the number of elements to display at a time
     # on index pages. Defaults to 20.

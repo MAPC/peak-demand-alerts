@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 ruby '2.4.9'
@@ -24,13 +26,13 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
-gem 'bourbon'
-gem 'rest-client'
-gem 'dotenv-rails'
 gem 'administrate'
+gem 'bourbon'
+gem 'dotenv-rails'
 gem 'enumerize'
-gem 'mailgun_rails'
 gem 'haml-rails'
+gem 'mailgun_rails'
+gem 'rest-client'
 gem 'stamp'
 
 # Use ActiveModel has_secure_password
@@ -53,4 +55,3 @@ group :development, :test do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
-

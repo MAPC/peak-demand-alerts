@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module ApplicationHelper
   def cell_style(f)
     str = "background-color: #{risk_background(f)}; color: #{risk_text_color(f)};"

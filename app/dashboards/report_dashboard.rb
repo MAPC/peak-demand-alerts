@@ -1,4 +1,6 @@
-require "administrate/base_dashboard"
+# frozen_string_literal: true
+
+require 'administrate/base_dashboard'
 
 class ReportDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
@@ -12,7 +14,7 @@ class ReportDashboard < Administrate::BaseDashboard
     id: Field::Number,
     current_date: Field::DateTime,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -20,28 +22,27 @@ class ReportDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :forecasts,
-    :id,
-    :current_date,
-    :created_at,
+  COLLECTION_ATTRIBUTES = %i[
+    forecasts
+    id
+    current_date
+    created_at
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :forecasts,
-    :id,
-    :current_date,
-    :created_at,
-    :updated_at,
+  SHOW_PAGE_ATTRIBUTES = %i[
+    forecasts
+    id
+    current_date
+    created_at
+    updated_at
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-  ].freeze
+  FORM_ATTRIBUTES = [].freeze
 
   # Overwrite this method to customize how reports are displayed
   # across all pages of the admin dashboard.

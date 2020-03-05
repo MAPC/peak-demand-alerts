@@ -1,5 +1,6 @@
-class Configuration < ActiveRecord::Base
+# frozen_string_literal: true
 
+class Configuration < ActiveRecord::Base
   def self.latest
     order(created_at: :asc).last
   end
@@ -11,5 +12,4 @@ class Configuration < ActiveRecord::Base
   def self.null
     new(possible_min: 0, possible_max: 0)
   end
-
 end

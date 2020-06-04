@@ -1,5 +1,6 @@
 default: &default
   adapter: postgresql
+  encoding: unicode
   pool: 5
   timeout: 5000
   schema_search_path: <%= ENV.fetch 'schema_search_path', 'peak_alerts' %>

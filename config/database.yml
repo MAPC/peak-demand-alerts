@@ -3,7 +3,7 @@ default: &default
   encoding: unicode
   pool: 5
   timeout: 5000
-  schema_search_path: <%= ENV.fetch 'schema_search_path', 'peak_alerts' %>
+  schema_search_path: <%= ENV.fetch 'SCHEMA_SEARCH_PATH', 'peak_alerts' %>
 
 development:
   <<: *default

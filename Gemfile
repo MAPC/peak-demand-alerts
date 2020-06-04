@@ -3,44 +3,48 @@
 source 'https://rubygems.org'
 
 ruby '2.5.8'
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 4.2'
-# Use sqlite3 as the database for Active Record
-
 gem 'pg', '~> 0.20'
-# Use SCSS for stylesheets
 gem 'sass-rails', '~> 6.0'
-# Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
-# Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.1.0'
-# See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
-
-# Use jquery as the JavaScript library
 gem 'jquery-rails'
-# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
-# bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'administrate'
 gem 'bourbon'
-gem 'dotenv-rails'
 gem 'enumerize'
 gem 'haml-rails'
 gem 'mailgun_rails'
 gem 'rest-client'
 gem 'stamp'
+gem 'puma'
 
-gem 'web-console', group: :development
+group :development do
+  gem 'pry-rails'
+  gem 'web-console'
+  gem 'guard'
+  gem 'guard-livereload'
+  gem 'guard-rspec'
+  gem 'rack-livereload'
+end
+
 group :development, :test do
-  gem 'byebug'
+  gem 'rspec-rails', '~> 3.9'
   gem 'erb2haml'
   gem 'spring'
+  gem 'pry-byebug'
+  gem 'dotenv-rails'
+  gem 'factory_bot_rails'
+end
+
+group :test do
+  gem 'capybara'
+  gem 'selenium-webdriver'
+  gem 'capybara-screenshot'
 end
 
 gem 'rails_12factor', group: :production
-gem 'puma'
+

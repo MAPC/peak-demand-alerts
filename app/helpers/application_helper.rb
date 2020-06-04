@@ -6,7 +6,6 @@ module ApplicationHelper
     str
   end
 
-  # FIXME: Too long.
   def risk_level_style(f)
     str = "background-color: #{risk_box_background(f)};"
     str << "color: #{risk_box_text_color(f)};"

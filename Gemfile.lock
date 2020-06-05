@@ -92,8 +92,6 @@ GEM
       http_parser.rb (~> 0.6.0)
     enumerize (2.3.1)
       activesupport (>= 3.2)
-    erb2haml (0.1.5)
-      html2haml
     erubi (1.9.0)
     erubis (2.7.0)
     eventmachine (1.2.7)
@@ -268,14 +266,14 @@ GEM
     rspec-mocks (3.9.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
-    rspec-rails (3.9.1)
-      actionpack (>= 3.0)
-      activesupport (>= 3.0)
-      railties (>= 3.0)
-      rspec-core (~> 3.9.0)
-      rspec-expectations (~> 3.9.0)
-      rspec-mocks (~> 3.9.0)
-      rspec-support (~> 3.9.0)
+    rspec-rails (4.0.1)
+      actionpack (>= 4.2)
+      activesupport (>= 4.2)
+      railties (>= 4.2)
+      rspec-core (~> 3.9)
+      rspec-expectations (~> 3.9)
+      rspec-mocks (~> 3.9)
+      rspec-support (~> 3.9)
     rspec-support (3.9.3)
     ruby_parser (3.14.2)
       sexp_processor (~> 4.9)
@@ -343,7 +341,6 @@ DEPENDENCIES
   capybara-screenshot
   dotenv-rails
   enumerize
-  erb2haml
   factory_bot_rails
   guard
   guard-livereload
@@ -360,7 +357,7 @@ DEPENDENCIES
   rails (~> 5.2)
   rails_12factor
   rest-client
-  rspec-rails (~> 3.9)
+  rspec-rails
   sass-rails (~> 6.0)
   sdoc (~> 0.4.0)
   selenium-webdriver
@@ -371,7 +368,7 @@ DEPENDENCIES
   web-console
 
 RUBY VERSION
-   ruby 2.5.8p224
+   ruby 2.7.1p83
 
 BUNDLED WITH
-   1.17.3
+   2.1.4

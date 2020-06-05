@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby '2.5.8'
+ruby '2.7.1'
 gem 'rails', '~> 5.2'
 gem 'pg', '~> 0.20'
 gem 'sass-rails', '~> 6.0'
@@ -31,8 +31,7 @@ group :development do
 end
 
 group :development, :test do
-  gem 'rspec-rails', '~> 3.9'
-  gem 'erb2haml'
+  gem 'rspec-rails'
   gem 'spring'
   gem 'pry-byebug'
   gem 'dotenv-rails'

@@ -1,12 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Report, :type => :mailer do
+  before(:all) { create(:configuration) }
+  let(:mail) { ReportMailer.daily(build(:report)) }
+
   it "renders the headers" do
-    create(:configuration)
-    report = create(:report)
-
-    mail = ReportMailer.daily(report)
-
     expect(mail.subject).to include("Peak Demand Update")
     expect(mail.to).to eq(['peakdemand@mapc.org'])
     expect(mail.from).to eq([ENV.fetch('EMAIL_FROM')])
@@ -14,7 +12,6 @@ RSpec.describe Report, :type => :mailer do
   end
 
   it 'renders the body' do
-    pending 'Need to refactor setup steps'
-    expect(mail.body.encoded).to include("Hi")
+    expect(mail.body.encoded).to include("UNLIKELY")
   end
 end

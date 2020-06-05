@@ -6,7 +6,7 @@ FactoryBot.define do
       forecasts_count { 5 }
     end
 
-    after(:create) do |report, evaluator|
+    after(:build) do |report, evaluator|
       create_list(:forecast, evaluator.forecasts_count, report: report)
     end
 

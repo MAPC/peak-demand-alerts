@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Forecast < ActiveRecord::Base
+class Forecast < ApplicationRecord
   extend Enumerize
 
   before_save :set_risk_category

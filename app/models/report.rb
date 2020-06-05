@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Report < ActiveRecord::Base
+class Report < ApplicationRecord
   after_save :scrape
 
   has_many :forecasts, -> { order(created_at: :asc) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Configuration < ActiveRecord::Base
+class Configuration < ApplicationRecord
   def self.latest
     order(created_at: :asc).last
   end

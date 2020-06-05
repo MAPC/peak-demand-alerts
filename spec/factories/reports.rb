@@ -10,6 +10,6 @@ FactoryBot.define do
       create_list(:forecast, evaluator.forecasts_count, report: report)
     end
 
-    after(:build) { |report| report.class.skip_callback(:save, :after, :scrape) }
+    after(:build) { |report| report.class.skip_callback(:save, :after, :scrape, raise: false) }
   end
 end

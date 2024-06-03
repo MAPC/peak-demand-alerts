@@ -39,6 +39,24 @@
         - @report.forecasts.each do |f|
           %td{style: cell_style(f)}
             - if f.today?
+              %nobr
+                Humidity
+            %nobr
+              = f.humidity
+              &percnt;
+      %tr
+        - @report.forecasts.each do |f|
+          %td{style: cell_style(f)}
+            - if f.today?
+              %nobr
+                Dew Point
+            %nobr
+              = f.dew_point
+              &deg;F
+      %tr
+        - @report.forecasts.each do |f|
+          %td{style: cell_style(f)}
+            - if f.today?
               Peak load
               %br
             = (f.peak_load.to_f / 1000).round(1)

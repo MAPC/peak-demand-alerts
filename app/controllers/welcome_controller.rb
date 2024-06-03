@@ -3,6 +3,6 @@
 class WelcomeController < ApplicationController
   def index
     @report = Report.latest
-    @forecast = @report.actual_forecast
+    @config = ::Configuration.latest
   end
 end

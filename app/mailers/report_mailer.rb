@@ -4,9 +4,16 @@ class ReportMailer < ApplicationMailer
   def daily(report)
     @report = report
     @config = ::Configuration.latest
-    mail to: 'peakdemand@mapc.org',
-         from: ENV.fetch('EMAIL_FROM'),
-         bcc: ENV.fetch('EMAIL_RECIPIENTS'),
-         subject: "Peak Demand Update - #{Time.now.strftime('%-m/%-d')}"
+    if ENV.fetch('ACTIVE')
+      message = mail(
+        from: "peakdemand@mapc.org",
+        to: "peakdemand@mailgun2.mapc.org",
+        subject: "Peak Demand Update - #{Date.today.strftime("%-m/%-d")}",
+        template: 'peak demand alerts',
+        body: "",
+        'X-Mailgun-Variables' => @report.to_json
+      )
+      message
+    end
   end
 end

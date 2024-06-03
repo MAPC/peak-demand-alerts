@@ -4,7 +4,7 @@ class ReportMailer < ApplicationMailer
   def daily(report)
     @report = report
     @config = ::Configuration.latest
-    if ENV.fetch('ACTIVE')
+    if ENV.fetch('ACTIVE', "false").downcase == "true"
       message = mail(
         from: "peakdemand@mapc.org",
         to: "peakdemand@mailgun2.mapc.org",

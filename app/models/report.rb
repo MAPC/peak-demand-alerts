@@ -19,12 +19,15 @@ class Report < ApplicationRecord
   end
 
   def scrape
-    # https://www.wunderground.com/weather/api/d/docs?d=data/conditions
+    wg_forecasts = weather_gov_forecasts
+    # weather.gov forecasts have two per day: daytime and nighttime
+    # Get highest temp from either forecast
+    high_temp = [wg_forecasts[0][0]['temperature'], wg_forecasts[1][0]['temperature']].max
     forecast = forecasts.create(
       projection: false,
-      high_temp: morning_report['CityForecastDetail'].detect do |i|
-        i['CityName'] == 'Boston'
-      end['HighTemperature'],
+      high_temp: high_temp,
+      dew_point: wg_forecasts[0][0]['dewpoint']['value'] * 9 / 5 + 32, # convert C to F
+      humidity: wg_forecasts[0][0]['relativeHumidity']['value'],
       peak_hour: DateTime.parse(peak_load['BeginDate']),
       peak_load: peak_load['LoadMw'].to_i,
       actual_peak_hour: Time.parse(morning_report['PeakLoadYesterdayHour']).hour,
@@ -32,14 +35,15 @@ class Report < ApplicationRecord
       date: Date.current
     )
 
-    seven_day_forecast.first['MarketDay'].each do |day|
-      high_temp = day['Weather']['CityWeather'].detect do |hash|
-        hash['CityName'] == 'Boston'
-      end['HighTempF']
+    sd_forecast = seven_day_forecast.first['MarketDay']
+    weather_gov_forecasts[0][0...-1].each.with_index() do |day, index|
+      high_temp = [day['temperature'], wg_forecasts[1][index]['temperature']].max
       forecasts.create(projection: true,
                        high_temp: high_temp,
-                       peak_load: day['PeakLoadMw'],
-                       date: Date.parse(day['MarketDate']))
+                       dew_point: day['dewpoint']['value'] * 9 / 5 + 32, # convert C to F
+                       humidity: day['relativeHumidity']['value'],
+                       peak_load: sd_forecast[index]['PeakLoadMw'],
+                       date: Date.parse(sd_forecast[index]['MarketDate']))
     end
   end
 
@@ -50,6 +54,11 @@ class Report < ApplicationRecord
   def morning_report
     url = 'https://webservices.iso-ne.com/api/v1.1/morningreport/current.json'
     request_json(url)['MorningReports']['MorningReport'].first
+  end
+
+  def weather_gov_forecasts
+    url = 'https://api.weather.gov/gridpoints/BOX/68,82/forecast'
+    request_json(url)['properties']['periods'].partition.with_index { |_, i| i.even? }
   end
 
   def current_hourly_load
@@ -66,6 +75,19 @@ class Report < ApplicationRecord
   def request_json(url)
     request = RestClient::Request.execute request_params.merge({ url: url })
     JSON.parse request
+  end
+
+  def as_json(options={})
+    {
+      likely: actual_forecast.risk == :likely ? 'true' : nil,
+      possible: actual_forecast.risk == :possible ? 'true' : nil,
+      unlikely: actual_forecast.risk == :unlikely ? 'true' : nil,
+      forecasts: forecasts[0..7].as_json
+    }
+  end
+
+  def to_json(*options)
+    as_json(*options).to_json(*options)
   end
 
   private

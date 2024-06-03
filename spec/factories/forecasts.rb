@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :forecast do
     date { Date.today }
     high_temp { 87 }
+    dew_point { 75 }
     peak_load { 20760 }
     humidity { nil }
     heat_index { nil }

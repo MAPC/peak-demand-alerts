@@ -39,6 +39,24 @@
         - @report.forecasts.each do |f|
           %td{style: cell_style(f)}
             - if f.today?
+              %nobr
+                Humidity
+            %nobr
+              = f.humidity
+              &percnt;
+      %tr
+        - @report.forecasts.each do |f|
+          %td{style: cell_style(f)}
+            - if f.today?
+              %nobr
+                Dew Point
+            %nobr
+              = f.dew_point
+              &deg;F
+      %tr
+        - @report.forecasts.each do |f|
+          %td{style: cell_style(f)}
+            - if f.today?
               Peak load
               %br
             = (f.peak_load.to_f / 1000).round(1)
@@ -102,6 +120,6 @@
     %strong
       It is a recommendation only.
   %p{style: 'font-size: small;'}
-    This service, provided by MAPC, is intended for facility operators that will use it to manage their own building energy use. Peak Demand Management data is intended only for non-commercial use. No recipient may use content for commercial use without the prior written consent of MAPC. Peak Demand Management data developed by the Metropolitan Area Planning Council (“MAPC”) is expressly provided “as is” and without warranty of any kind, either expressed or implied, including, but not limited to, accuracy, currency, reliability, omissions or completeness. For
-    %a{href: 'mailto:PeakDemand@mapc.org?subject=Question'} questions
-    please click on this link to send an email to peakdemand@mapc.org.
+    This service, provided by MAPC, is intended for facility operators that will use it to manage their own building energy use. Peak Demand Management data is intended only for non-commercial use. No recipient may use content for commercial use without the prior written consent of MAPC. Peak Demand Management data developed by the Metropolitan Area Planning Council (“MAPC”) is expressly provided “as is” and without warranty of any kind, either expressed or implied, including, but not limited to, accuracy, currency, reliability, omissions or completeness. For questions, please click on
+    %a{href: 'mailto:PeakDemand@mapc.org?subject=Question'} this link
+    to send an email to peakdemand@mapc.org.

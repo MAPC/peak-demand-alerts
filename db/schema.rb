@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2016_07_20_161127) do
+ActiveRecord::Schema.define(version: 2024_05_21_201901) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 2016_07_20_161127) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "peak_hour"
+    t.integer "dew_point"
   end
 
   create_table "reports", force: :cascade do |t|

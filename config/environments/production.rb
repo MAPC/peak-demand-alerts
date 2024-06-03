@@ -96,10 +96,13 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Mailgun configurations
   config.action_mailer.delivery_method = :mailgun
   config.action_mailer.mailgun_settings = {
     api_key: ENV['MAILGUN_API_KEY'],
     domain: ENV['MAILGUN_DOMAIN']
   }
+
   Rails.application.default_url_options[:host] = ENV['DEFAULT_HOST']
 end

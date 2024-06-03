@@ -37,6 +37,19 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  # Enable these configs to test actual email delivery using Mailgun
+  # NOTE: Be careful of which api_key/domain are being used for the
+  #       mailgun settings: you _can_ send emails to the real mailing list
+  #       this way!
+  # config.action_controller.asset_host = 'https://peak-alerts.herokuapp.com'
+  # config.action_mailer.perform_deliveries = true
+  # config.action_mailer.raise_delivery_errors = true
+  # config.action_mailer.delivery_method = :mailgun
+  # config.action_mailer.mailgun_settings = {
+  #   api_key: ENV['MAILGUN_API_KEY'],
+  #   domain: ENV['MAILGUN_DOMAIN']
+  # }
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 

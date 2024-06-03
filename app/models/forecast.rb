@@ -45,6 +45,26 @@ class Forecast < ApplicationRecord
     end
   end
 
+  def as_json(options={})
+    {
+      today: today? ? 'true' : nil,
+      date: date.strftime("%a %d %b").upcase,
+      high: high_temp,
+      humidity: humidity,
+      dewPoint: dew_point,
+      peakLoad: (peak_load.to_f / 1000).round(1),
+      peakHourRange: today? ? peak_hour_range : "",
+      risk: risk.upcase,
+      likely: risk == :likely ? 'true' : nil,
+      possible: risk == :possible ? 'true' : nil,
+      unlikely: risk == :unlikely ? 'true' : nil,
+    }
+  end
+
+  def to_json(*options)
+    as_json(*options).to_json(*options)
+  end
+
   private
 
   def set_risk_category

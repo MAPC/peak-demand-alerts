@@ -2,15 +2,15 @@
 
 source 'https://rubygems.org'
 
-ruby '2.7.8'
-gem 'rails', '~> 5.2'
-gem 'pg', '~> 0.20'
-gem 'sass-rails', '~> 6.0'
-gem 'uglifier', '>= 1.3.0'
+ruby '3.3.2'
+gem 'rails', '~> 6.1'
+gem 'pg'
+gem 'sass-rails'
+gem 'uglifier'
 gem 'jquery-rails'
 gem 'turbolinks'
-gem 'jbuilder', '~> 2.0'
-gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'jbuilder'
+gem 'sdoc', group: :doc
 
 gem 'administrate'
 gem 'bourbon'

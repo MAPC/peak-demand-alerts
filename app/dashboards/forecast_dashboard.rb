@@ -14,9 +14,10 @@ class ForecastDashboard < Administrate::BaseDashboard
     id: Field::Number,
     date: Field::DateTime,
     high_temp: Field::Number,
-    peak_hour: Field::Number,
+    peak_hour: Field::DateTime,
     peak_load: Field::Number,
     humidity: Field::Number,
+    dew_point: Field::Number,
     heat_index: Field::Number,
     temperature: Field::String.with_options(searchable: false),
     actual_peak_hour: Field::Number,
@@ -40,6 +41,7 @@ class ForecastDashboard < Administrate::BaseDashboard
     peak_hour
     peak_load
     humidity
+    dew_point
     heat_index
     temperature
     actual_peak_hour
@@ -60,6 +62,7 @@ class ForecastDashboard < Administrate::BaseDashboard
     peak_hour
     peak_load
     humidity
+    dew_point
     heat_index
     temperature
     actual_peak_hour

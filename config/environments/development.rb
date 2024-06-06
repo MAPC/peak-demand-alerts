@@ -41,6 +41,8 @@ Rails.application.configure do
   # NOTE: Be careful of which api_key/domain are being used for the
   #       mailgun settings: you _can_ send emails to the real mailing list
   #       this way!
+  #       Note that you can also control whether emails get sent by setting
+  #       the ACTIVE environment variable to true or false
   # config.action_controller.asset_host = 'https://peak-alerts.herokuapp.com'
   # config.action_mailer.perform_deliveries = true
   # config.action_mailer.raise_delivery_errors = true

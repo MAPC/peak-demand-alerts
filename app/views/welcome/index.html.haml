@@ -8,118 +8,124 @@
     white-space: nowrap;
   }
 
-= image_tag("Transparent_SummerPeak_Original.png", width: '25%', align: 'right')
 
 %div#container{dir: "ltr"}
-  %h3
-    The annual peak is
-    %span{style: "color: #{risk_color(@report.actual_forecast)}"}
-      = @report.actual_forecast.risk.upcase
-    today.
-  %table{cellspacing: 0, cellpadding: 6, border: 0, style: "border-collapse: separate; border-spacing: 8px 0; text-align: center; margin-bottom: 40px; table-layout: fixed;"}
-    %thead
-      %tr
-        - @report.forecasts.each do |f|
-          %th{style: "width: 14.29%; text-transform: uppercase; text-align: center; #{header_style(f)}"}
-            - if f.today?
-              Today
-              %br
-            = f.date.to_s(:header)
-    %tbody
-      %tr
-        - @report.forecasts.each do |f|
-          %td{style: cell_style(f)}
-            - if f.today?
+  - if @report.nil?
+    %h3
+      Today's energy forecast is not yet available.
+    %p
+      Forecasts are created daily at 10:00 AM Eastern Time. Check back later to see today's forecast.
+  - if !@report.nil?
+    = image_tag("Transparent_SummerPeak_Original.png", width: '25%', align: 'right')
+    %h3
+      The annual peak is
+      %span{style: "color: #{risk_color(@report.actual_forecast)}"}
+        = @report.actual_forecast.risk.upcase
+      today.
+    %table{cellspacing: 0, cellpadding: 6, border: 0, style: "border-collapse: separate; border-spacing: 8px 0; text-align: center; margin-bottom: 40px; table-layout: fixed;"}
+      %thead
+        %tr
+          - @report.forecasts.each do |f|
+            %th{style: "width: 14.29%; text-transform: uppercase; text-align: center; #{header_style(f)}"}
+              - if f.today?
+                Today
+                %br
+              = f.date.to_s(:header)
+      %tbody
+        %tr
+          - @report.forecasts.each do |f|
+            %td{style: cell_style(f)}
+              - if f.today?
+                %nobr
+                  High of
               %nobr
-                High of
-            %nobr
-              = f.high_temp
-              &deg;F
-      %tr
-        - @report.forecasts.each do |f|
-          %td{style: cell_style(f)}
-            - if f.today?
+                = f.high_temp
+                &deg;F
+        %tr
+          - @report.forecasts.each do |f|
+            %td{style: cell_style(f)}
+              - if f.today?
+                %nobr
+                  Humidity
               %nobr
-                Humidity
-            %nobr
-              = f.humidity
-              &percnt;
-      %tr
-        - @report.forecasts.each do |f|
-          %td{style: cell_style(f)}
-            - if f.today?
+                = f.humidity
+                &percnt;
+        %tr
+          - @report.forecasts.each do |f|
+            %td{style: cell_style(f)}
+              - if f.today?
+                %nobr
+                  Dew Point
               %nobr
-                Dew Point
-            %nobr
-              = f.dew_point
-              &deg;F
-      %tr
-        - @report.forecasts.each do |f|
-          %td{style: cell_style(f)}
-            - if f.today?
-              Peak load
+                = f.dew_point
+                &deg;F
+        %tr
+          - @report.forecasts.each do |f|
+            %td{style: cell_style(f)}
+              - if f.today?
+                Peak load
+                %br
+              = (f.peak_load.to_f / 1000).round(1)
+              GW
               %br
-            = (f.peak_load.to_f / 1000).round(1)
-            GW
-            %br
-            - if f.today?
-              at
-              = f.peak_hour_range
-              %br
+              - if f.today?
+                at
+                = f.peak_hour_range
+                %br
+        %tr
+          - @report.forecasts.each do |f|
+            %td{style: risk_level_style(f)}
+              %nobr
+                = f.risk.upcase
+
+
+    %hr
+
+    -# FIXME: This belongs in a controller.
+    - min_gw = (@config.possible_min.to_f / 1000).round(1)
+    - max_gw = (@config.possible_max.to_f / 1000).round(1)
+
+    %p
+      %a{href: 'http://iso-ne.com/isoexpress/', target: '_blank'}
+        ISO-NE Real-Time Data
+
+      &bull;
+
+      %a{href: 'https://www.mapc.org/our-work/expertise/clean-energy/peak-demand/', target: '_blank'}
+        MAPC's load-shedding tips
+
+      &bull;
+
+      %a{href: 'https://www.mapc.org/our-work/expertise/clean-energy/peak-demand/', target: '_blank'}
+        Last Summer's Peak
+
+    %h4 Reference
+
+    %table{border: 0, width: 400}
+      %tr{width: 200}
+        %td
+          %strong{style: 'color: green;'} UNLIKELY
+        %td
+          &lt; #{ min_gw } GW
       %tr
-        - @report.forecasts.each do |f|
-          %td{style: risk_level_style(f)}
-            %nobr
-              = f.risk.upcase
+        %td
+          %strong{style: 'color: orange;'} POSSIBLE
+        %td
+          #{ min_gw } GW &mdash; #{ max_gw } GW
+      %tr
+        %td
+          %strong{style: 'color: red;'} LIKELY
+        %td
+          &gt; #{ max_gw } GW
 
-
-  %hr
-
-  -# FIXME: This belongs in a controller.
-  - min_gw = (@config.possible_min.to_f / 1000).round(1)
-  - max_gw = (@config.possible_max.to_f / 1000).round(1)
-
-  %p
-    %a{href: 'http://iso-ne.com/isoexpress/', target: '_blank'}
-      ISO-NE Real-Time Data
-
-    &bull;
-
-    %a{href: 'https://www.mapc.org/our-work/expertise/clean-energy/peak-demand/', target: '_blank'}
-      MAPC's load-shedding tips
-
-    &bull;
-
-    %a{href: 'https://www.mapc.org/our-work/expertise/clean-energy/peak-demand/', target: '_blank'}
-      Last Summer's Peak
-
-  %h4 Reference
-
-  %table{border: 0, width: 400}
-    %tr{width: 200}
-      %td
-        %strong{style: 'color: green;'} UNLIKELY
-      %td
-        &lt; #{ min_gw } GW
-    %tr
-      %td
-        %strong{style: 'color: orange;'} POSSIBLE
-      %td
-        #{ min_gw } GW &mdash; #{ max_gw } GW
-    %tr
-      %td
-        %strong{style: 'color: red;'} LIKELY
-      %td
-        &gt; #{ max_gw } GW
-
-  %h5 How to use this table
-  %p{style: 'font-size: small;'}
-    This table is intended as a guide to help entities anticipate when the annual peak load for the ISO-NE system will occur and to make their own decisions about whether and when to load shed.
-  %p{style: 'font-size: small;'}
-    The "Risk of the Annual Peak" rating is generated by MAPC based on a comparison of the estimated Peak Load for the day reported by ISO-NE and load on historic annual peak days.
-    %strong
-      It is a recommendation only.
-  %p{style: 'font-size: small;'}
-    This service, provided by MAPC, is intended for facility operators that will use it to manage their own building energy use. Peak Demand Management data is intended only for non-commercial use. No recipient may use content for commercial use without the prior written consent of MAPC. Peak Demand Management data developed by the Metropolitan Area Planning Council (“MAPC”) is expressly provided “as is” and without warranty of any kind, either expressed or implied, including, but not limited to, accuracy, currency, reliability, omissions or completeness. For questions, please click on
-    %a{href: 'mailto:PeakDemand@mapc.org?subject=Question'} this link
-    to send an email to peakdemand@mapc.org.
+    %h5 How to use this table
+    %p{style: 'font-size: small;'}
+      This table is intended as a guide to help entities anticipate when the annual peak load for the ISO-NE system will occur and to make their own decisions about whether and when to load shed.
+    %p{style: 'font-size: small;'}
+      The "Risk of the Annual Peak" rating is generated by MAPC based on a comparison of the estimated Peak Load for the day reported by ISO-NE and load on historic annual peak days.
+      %strong
+        It is a recommendation only.
+    %p{style: 'font-size: small;'}
+      This service, provided by MAPC, is intended for facility operators that will use it to manage their own building energy use. Peak Demand Management data is intended only for non-commercial use. No recipient may use content for commercial use without the prior written consent of MAPC. Peak Demand Management data developed by the Metropolitan Area Planning Council (“MAPC”) is expressly provided “as is” and without warranty of any kind, either expressed or implied, including, but not limited to, accuracy, currency, reliability, omissions or completeness. For questions, please click on
+      %a{href: 'mailto:PeakDemand@mapc.org?subject=Question'} this link
+      to send an email to peakdemand@mapc.org.

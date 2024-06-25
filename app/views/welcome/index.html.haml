@@ -48,8 +48,12 @@
                 %nobr
                   Humidity
               %nobr
-                = f.humidity
-                &percnt;
+                - if f.humidity.nil?
+                  %nobr
+                    N/A
+                - if !f.humidity.nil?
+                  = f.humidity
+                  &percnt;
         %tr
           - @report.forecasts.each do |f|
             %td{style: cell_style(f)}
@@ -57,8 +61,12 @@
                 %nobr
                   Dew Point
               %nobr
-                = f.dew_point
-                &deg;F
+                - if f.dew_point.nil?
+                  %nobr
+                    N/A
+                - if !f.dew_point.nil?
+                  = f.dew_point
+                  &deg;F
         %tr
           - @report.forecasts.each do |f|
             %td{style: cell_style(f)}

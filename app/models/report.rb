@@ -23,11 +23,13 @@ class Report < ApplicationRecord
     # weather.gov forecasts have two per day: daytime and nighttime
     # Get highest temp from either forecast
     high_temp = [wg_forecasts[0][0]['temperature'], wg_forecasts[1][0]['temperature']].max
+    dew_point = wg_forecasts[0][0].key?('dewpoint') ? wg_forecasts[0][0]['dewpoint']['value'] * 9 / 5 + 32 : nil # convert C to F
+    humidity = wg_forecasts[0][0].key?('relativeHumidity') ? ['relativeHumidity']['value'] : nil
     forecast = forecasts.create(
       projection: false,
       high_temp: high_temp,
-      dew_point: wg_forecasts[0][0]['dewpoint']['value'] * 9 / 5 + 32, # convert C to F
-      humidity: wg_forecasts[0][0]['relativeHumidity']['value'],
+      dew_point: dew_point,
+      humidity: humidity,
       peak_hour: DateTime.parse(peak_load['BeginDate']),
       peak_load: peak_load['LoadMw'].to_i,
       actual_peak_hour: Time.parse(morning_report['PeakLoadYesterdayHour']).hour,
@@ -38,10 +40,12 @@ class Report < ApplicationRecord
     sd_forecast = seven_day_forecast.first['MarketDay']
     weather_gov_forecasts[0][0...-1].each.with_index() do |day, index|
       high_temp = [day['temperature'], wg_forecasts[1][index]['temperature']].max
+      dew_point = day.key?('dewpoint') ? day['dewpoint']['value'] * 9 / 5 + 32 : nil # convert C to F
+      humidity = day.key?('relativeHumidity') ? ['relativeHumidity']['value'] : nil
       forecasts.create(projection: true,
                        high_temp: high_temp,
-                       dew_point: day['dewpoint']['value'] * 9 / 5 + 32, # convert C to F
-                       humidity: day['relativeHumidity']['value'],
+                       dew_point: dew_point,
+                       humidity: humidity,
                        peak_load: sd_forecast[index]['PeakLoadMw'],
                        date: Date.parse(sd_forecast[index]['MarketDate']))
     end

@@ -42,8 +42,12 @@
               %nobr
                 Humidity
             %nobr
-              = f.humidity
-              &percnt;
+              - if f.humidity.nil?
+                %nobr
+                  N/A
+              - if !f.humidity.nil?
+                = f.humidity
+                &percnt;
       %tr
         - @report.forecasts.each do |f|
           %td{style: cell_style(f)}

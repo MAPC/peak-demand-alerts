@@ -8,6 +8,8 @@ class ReportMailer < ApplicationMailer
       mailgun_vars = @report.as_json
       mailgun_vars[:possible_min] = (@config.possible_min / 1000.0).to_s
       mailgun_vars[:possible_max] = (@config.possible_max / 1000.0).to_s
+      mailgun_vars[:has_humidity] = mailgun_vars[:humidity].is_a? Integer
+      mailgun_vars[:has_dew_point] = mailgun_vars[:dew_point].is_a? Integer
       message = mail(
         from: ENV.fetch('EMAIL_FROM', 'Peak Load via MAPC <peakdemand@mapc.org>'),
         to: "peakdemand@mailgun2.mapc.org",

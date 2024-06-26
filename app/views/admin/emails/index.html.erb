@@ -1,0 +1,23 @@
+<div style="padding: 20px">
+  <div>
+    <h2>Today's Emails</h2>
+    <p>
+      <span>Delivered: </span>
+      <%= @mailing_details[:delivered_count] %>/<%= @mailing_details[:list_members].length %>
+    </p>
+    <p>
+      <details>
+        <summary>Failed: <%= @mailing_details[:failed_count] %>/<%= @mailing_details[:list_members].length %></summary>
+        <ul>
+          <% @mailing_details[:failed_recipients].each do |recipient| %>
+            <li><%= recipient %></li>
+          <% end %>
+        </ul>
+      </details>
+    </p>
+  </div>
+  <div>
+    <h2>Mailing List</h2>
+    <textarea readonly rows="100" cols="35"><%= @mailing_details[:list_members].join("\n") %></textarea>
+  </div>
+</div>

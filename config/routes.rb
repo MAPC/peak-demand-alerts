@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     resources :configurations
     resources :forecasts
     resources :reports
+    resources :emails, only: [:index]
 
     root to: 'configurations#index'
   end

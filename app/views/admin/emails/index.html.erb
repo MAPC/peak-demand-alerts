@@ -7,12 +7,73 @@
     </p>
     <p>
       <details>
-        <summary>Failed: <%= @mailing_details[:failed_count] %>/<%= @mailing_details[:list_members].length %></summary>
-        <ul>
-          <% @mailing_details[:failed_recipients].each do |recipient| %>
-            <li><%= recipient %></li>
-          <% end %>
-        </ul>
+        <summary>Failed: <%= @mailing_details[:failed_recipients].length %>/<%= @mailing_details[:list_members].length %></summary>
+        <table>
+          <thead>
+            <tr>
+              <th>
+                Recipient Address
+              </th>
+              <th>
+                Reason for failure
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @mailing_details[:failed_recipients].sort_by{|r| [r[1], r[0]]}.each do |record| %>
+              <tr>
+                <td><%= record[0] %></td>
+                <td><%= record[1] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </details>
+    </p>
+    <p>
+      <details>
+        <summary>Pending: <%= @mailing_details[:pending_recipients].length %>/<%= @mailing_details[:list_members].length %></summary>
+        <table>
+          <thead>
+            <tr>
+              <th>
+                Recipient Address
+              </th>
+              <th>
+                Reason for delay
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @mailing_details[:pending_recipients].each do |record| %>
+              <tr>
+                <td><%= record[0] %></td>
+                <td><%= record[1] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </details>
+    </p>
+    <p>
+      <details>
+        <summary>No records for: <%= @mailing_details[:unexplained_recipients].length %>/<%= @mailing_details[:list_members].length %></summary>
+        <table>
+          <thead>
+            <tr>
+              <th>
+                Recipient Address
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @mailing_details[:unexplained_recipients].each do |record| %>
+              <tr>
+                <td><%= record %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
       </details>
     </p>
   </div>

@@ -19,35 +19,43 @@ module Admin
 
       # Delivery status for today
       now = Time.now
-      today = Time.new(now.year, now.month, now.day)
+      today = Time.new(now.year, now.month, now.day, 0, 0, 0)
 
       total = 0
-      delivered_count = 0
-      failed_count = 0
 
+      successful_recipients = []
       failed_recipients = []
+      pending_recipients = []
 
-      events_result = mg_events.get({'begin' => today.to_i,
+      events_result = mg_events.get({'begin' => today.to_i, 'end' => now.to_i,
                         'list' => 'peakdemand@mailgun2.mapc.org'})
 
       loop do
         events_result.to_h['items'].each do | item |
             total += 1
             if item['event'] == 'delivered'
-              delivered_count += 1
-            elsif item['event'] == 'failed'
-              failed_count += 1
-              failed_recipients.push("#{item['recipient']} - #{item['severity']}, #{item['reason']}")
+              successful_recipients.push("#{item['recipient']}")
+            elsif item['event'] == 'failed' && item['severity'] == 'permanent'
+              failed_recipients.push([item['recipient'], item['reason']])
+            elsif item['event'] == 'failed' && item['severity'] == 'temporary'
+              pending_recipients.push([item['recipient'], item['reason']])
             end
         end
         events_result = mg_events.next
         break if events_result.to_h['items'].length == 0
       end
 
+      # No longer pending if we have a delivered event for this recipient
+      pending_recipients = pending_recipients.select{ |record| !successful_recipients.include?(record[0]) }
+
+      # No event found at all for these recipients:
+      unexplained_recipients = list_members - failed_recipients.map{ |record| record[0] } - pending_recipients.map{ |record| record[0] } - successful_recipients
+
       @mailing_details = {
-        delivered_count: delivered_count,
-        failed_count: failed_count,
+        delivered_count: successful_recipients.length,
         failed_recipients: failed_recipients,
+        pending_recipients: pending_recipients,
+        unexplained_recipients: unexplained_recipients,
         list_members: list_members,
       }
     end

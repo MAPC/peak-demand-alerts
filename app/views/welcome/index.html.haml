@@ -45,35 +45,9 @@
           - @report.forecasts.each do |f|
             %td{style: cell_style(f)}
               - if f.today?
-                %nobr
-                  Humidity
-              %nobr
-                - if f.humidity.nil?
-                  %nobr
-                    N/A
-                - if !f.humidity.nil?
-                  = f.humidity
-                  &percnt;
-        %tr
-          - @report.forecasts.each do |f|
-            %td{style: cell_style(f)}
-              - if f.today?
-                %nobr
-                  Dew Point
-              %nobr
-                - if f.dew_point.nil?
-                  %nobr
-                    N/A
-                - if !f.dew_point.nil?
-                  = f.dew_point
-                  &deg;F
-        %tr
-          - @report.forecasts.each do |f|
-            %td{style: cell_style(f)}
-              - if f.today?
                 Peak load
                 %br
-              = (f.peak_load.to_f / 1000).round(3)
+              = (f.peak_load.to_f / 1000).round(1)
               GW
               %br
               - if f.today?
@@ -90,8 +64,8 @@
     %hr
 
     -# FIXME: This belongs in a controller.
-    - min_gw = (@config.possible_min.to_f / 1000).round(3)
-    - max_gw = (@config.possible_max.to_f / 1000).round(3)
+    - min_gw = (@config.possible_min.to_f / 1000).round(1)
+    - max_gw = (@config.possible_max.to_f / 1000).round(1)
 
     %p
       %a{href: 'http://iso-ne.com/isoexpress/', target: '_blank'}

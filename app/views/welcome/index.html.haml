@@ -73,7 +73,7 @@
               - if f.today?
                 Peak load
                 %br
-              = (f.peak_load.to_f / 1000).round(1)
+              = (f.peak_load.to_f / 1000).round(3)
               GW
               %br
               - if f.today?
@@ -90,8 +90,8 @@
     %hr
 
     -# FIXME: This belongs in a controller.
-    - min_gw = (@config.possible_min.to_f / 1000).round(1)
-    - max_gw = (@config.possible_max.to_f / 1000).round(1)
+    - min_gw = (@config.possible_min.to_f / 1000).round(3)
+    - max_gw = (@config.possible_max.to_f / 1000).round(3)
 
     %p
       %a{href: 'http://iso-ne.com/isoexpress/', target: '_blank'}

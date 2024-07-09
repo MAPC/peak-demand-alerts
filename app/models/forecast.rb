@@ -52,7 +52,7 @@ class Forecast < ApplicationRecord
       high: high_temp,
       humidity: humidity.nil? ? 'N/A' : humidity,
       dewPoint: dew_point.nil? ? 'N/A' : dew_point,
-      peakLoad: (peak_load.to_f / 1000).round(1),
+      peakLoad: (peak_load.to_f / 1000).round(3),
       peakHourRange: today? ? peak_hour_range : "",
       risk: risk.upcase,
       likely: risk == :likely ? 'true' : nil,

@@ -18,6 +18,7 @@ gem 'enumerize'
 gem 'haml-rails'
 gem 'mailgun-ruby'
 gem 'rest-client'
+gem 'retriable', '~> 3.1'
 gem 'stamp'
 gem 'puma'
 

@@ -279,6 +279,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
+    retriable (3.1.2)
     rexml (3.2.8)
       strscan (>= 3.0.9)
     rspec (3.13.0)
@@ -383,6 +384,7 @@ DEPENDENCIES
   rails (~> 6.1)
   rails_12factor
   rest-client
+  retriable (~> 3.1)
   rspec-rails
   sass-rails
   sdoc

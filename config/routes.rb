@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get 'status/email'
   namespace :admin do
     resources :configurations
     resources :forecasts

@@ -38,7 +38,7 @@ class Report < ApplicationRecord
     )
 
     sd_forecast = seven_day_forecast.first['MarketDay']
-    weather_gov_forecasts[0][0...-1].each.with_index() do |day, index|
+    wg_forecasts[0][0...-1].each.with_index() do |day, index|
       high_temp = [day['temperature'], wg_forecasts[1][index]['temperature']].max
       dew_point = day.key?('dewpoint') ? day['dewpoint']['value'] * 9 / 5 + 32 : nil # convert C to F
       humidity = day.key?('relativeHumidity') ? ['relativeHumidity']['value'] : nil
@@ -61,8 +61,11 @@ class Report < ApplicationRecord
   end
 
   def weather_gov_forecasts
-    url = 'https://api.weather.gov/gridpoints/BOX/68,82/forecast'
-    request_json(url)['properties']['periods'].partition.with_index { |_, i| i.even? }
+    Retriable.retriable(tries: 5, base_interval: 10) do
+      resp = RestClient.get 'https://api.weather.gov/gridpoints/BOX/68,82/forecast'
+      response_json = JSON.parse resp
+      response_json['properties']['periods'].partition.with_index { |_, i| i.even? }
+    end
   end
 
   def current_hourly_load
@@ -77,8 +80,10 @@ class Report < ApplicationRecord
   end
 
   def request_json(url)
-    request = RestClient::Request.execute request_params.merge({ url: url })
-    JSON.parse request
+    Retriable.retriable(tries: 5, base_interval: 10) do
+      resp = RestClient::Request.execute request_params.merge({ url: url })
+      JSON.parse resp
+    end
   end
 
   def as_json(options={})

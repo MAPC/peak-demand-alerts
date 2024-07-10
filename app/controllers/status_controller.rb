@@ -13,7 +13,7 @@ class StatusController < ApplicationController
 
     now = Time.now
     today = Time.new(now.year, now.month, now.day, 0, 0, 0)
-    ten_fifteen_today = Time.new(now.year, now.month, now.day, 10, 15, 0)
+    ten_fifteen_today = Time.new(now.year, now.month, now.day, 10, 15, 0, Time.zone)
 
     if now < ten_fifteen_today
       # use cached value from yesterday

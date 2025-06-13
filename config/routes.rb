@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     resources :forecasts
     resources :reports
     resources :emails, only: [:index]
+    resources :peaks, only: [:index, :create]
 
     root to: 'configurations#index'
   end

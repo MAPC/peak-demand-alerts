@@ -12,8 +12,7 @@ module Admin
       if params[:recipients] == "internal"
         recipient = "#{params[:mapc_recipient]}@mapc.org"
       elsif params[:recipients] == "list"
-        recipient = "staging@mailgun2.mapc.org"
-        # recipient = "peakdemand@mailgun2.mapc.org"
+        recipient = ENV.fetch('MAILGUN_MAILING_LIST', 'staging@mailgun2.mapc.org')
       end
       mg_client = Mailgun::Client.new(ENV.fetch('MAILGUN_API_KEY'))
       mb_obj = Mailgun::MessageBuilder.new

@@ -1,0 +1,316 @@
+<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+<div style="padding: 20px;display:flex;gap: 1em;">
+  <div id="left" style="flex: 1;">
+    <h2>Likely Peak Notification</h2>
+    <span>Use this form to send a "likely peak" notification to all mailing list recipients.</span>
+    <%= form_with do |form| %>
+      <div style="padding-top: 1em;">
+        <label for="peak_start">Predicted peak start</label>
+        <input
+          style="width:fit-content;"
+          name="peak_start"
+          id="peak-start"
+          type="datetime-local"
+          step="360"
+          onInput="handlePeakStartChange()"
+          onChange="handlePeakStartChange()"
+          required
+        />
+      </div>
+
+      <div style="padding-top: 1em;">
+        <label for="peak_end">Predicted peak end</label>
+        <input
+          style="width:fit-content;"
+          name="peak_end"
+          id="peak-end"
+          type="datetime-local"
+          step="360"
+          onInput="updatePreview()"
+          onChange="updatePreview()"
+          required
+        />
+      </div>
+
+      <div style="padding-top: 1em;">
+        <label for="peak_value">Predicted peak power</label>
+        <input
+          style="width:fit-content;display:inline;"
+          name="peak_value"
+          type="numeric"
+          step="0.1"
+          onInput="updatePreview()"
+          onChange="updatePreview()"
+          required
+        />
+        <label for="peak_value" style="display: inline-block;">GW</label>
+      </div>
+
+      <div style="padding-top: 1em;">
+        <label for="action_start">Recommended start of action</label>
+        <input
+          style="width:fit-content;"
+          name="action_start"
+          id="action-start"
+          type="datetime-local"
+          step="360"
+          onInput="updatePreview()"
+          onChange="updatePreview()"
+          required
+        />
+      </div>
+
+      <div style="padding-top: 1em;">
+        <label for="action_end">Recommended end of action</label>
+        <input
+          style="width:fit-content;"
+          name="action_end"
+          id="action-end"
+          type="datetime-local"
+          step="360"
+          onInput="updatePreview()"
+          onChange="updatePreview()"
+          required
+        />
+      </div>
+
+      <div style="padding-top: 1em;">
+        <label for="note_1">Custom note 1 (after section with peak hour prediction, optional)</label>
+        <textarea 
+          rows="3"
+          cols="120"
+          name="note_1"
+          onChange="updatePreview()"
+          onInput="updatePreview()"
+        ></textarea>
+      </div>
+
+      <div style="padding-top: 1em;">
+        <label for="note_2">Custom note 2 (after call to action, optional)</label>
+        <textarea 
+          rows="3"
+          cols="120"
+          name="note_2"
+          onChange="updatePreview()"
+          onInput="updatePreview()"
+        ></textarea>
+      </div>
+      
+      <div style="padding-top: 1em;">
+        <label for="recipients">Send to:</label>
+        <select 
+          style="width:fit-content;"
+          name="recipients"
+          onChange="updatePreview()"
+          onInput="updatePreview()"
+        > 
+          <option value="nobody">Nobody</option>
+          <option value="internal">An MAPC Email Address</option>
+          <option value="list">Peak Demand Mailing List (<%= @mailing_details[:list_count] %> recipients)</option>
+        </select>
+        <div id="mapc-recipient">
+          <input 
+            name="mapc_recipient"
+            style="display:inline;width:10em;"
+            onChange="updatePreview()"
+            onInput="updatePreview()"
+          ></input>
+          <label for="mapc_recipient" style="display:inline-block;">@mapc.org</label>
+        </div>
+      </div>
+
+      <div style="padding-top: 3em;">
+        <button
+          id="send-button"
+          style="padding-top: 1em;"
+          type="button"
+          disabled
+          onClick="submitForm()"
+        >
+          Send "Likely Peak" Email
+        </button>
+      </div>
+      <div id="flash" style="padding-top: 1em;">
+      </div>
+    <% end %>
+  </div>
+  <div id="right" style="flex: 1;">
+    <label for="preview">Email Preview</label> 
+    <div name="preview" id="preview" style="border: 1px solid #666;height: 100%; width: 100%;">
+      <iframe style="height:100%;width:100%;" id="preview-frame"></iframe>
+    </div>
+  </div>
+</div>
+<script>
+  const submitForm = async (e) => {
+    const theForm = document.getElementsByTagName("form")[0];
+    if(!theForm.checkValidity()) {
+      theForm.reportValidity();
+      return false;
+    }
+
+    sendButton.disabled = true;
+    const templateVariables = updatePreview();
+    const body = {
+      peak_start_hour: templateVariables["peak_start_hour"],
+      peak_end_hour: templateVariables["peak_end_hour"],
+      peak_value_gw: templateVariables["peak_value_gw"],
+      day_of_week: templateVariables["day_of_week"],
+      day_of_week_capitalized: templateVariables["day_of_week_capitalized"],
+      action_start_hour: templateVariables["action_start_hour"],
+      action_end_hour: templateVariables["action_end_hour"],
+      note_1: templateVariables["note_1"],
+      note_2: templateVariables["note_2"],
+      recipients: templateVariables["recipients"],
+      mapc_recipient: templateVariables["mapc_recipient"],
+      authenticity_token: templateVariables["authenticity_token"],
+      "utf8": templateVariables["utf8"],
+    };
+    const response = await fetch("/admin/peaks", {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {
+        'content-type': 'application/json'
+      },
+    });
+    if(!response.ok) {
+      const errorText = document.createElement("p");
+      errorText.textContent = "There was an issue queuing message for delivery; try again or contact Digital Services team for support.";
+      flashDiv.appendChild(errorText);
+    }
+    const responseJSON = await response.json();
+    const flashDiv = document.getElementById("flash")
+    if(responseJSON.success) {
+      flashDiv.textContent = "Message successfully queued for delivery.";
+    } else {
+       
+      const errorText = document.createElement("p");
+      errorText.textContent = "There was an issue queuing message for delivery; check Mailgun delivery logs or contact Digital Services team for support.";
+      const logLink = document.createElement("a");
+      logLink.href = "https://app.mailgun.com/mg/reporting/logs";
+      logLink.textContent = "Mailgun delivery logs";
+      flashDiv.appendChild(errorText);
+      flashDiv.appendChild(logLink);
+    }
+    sendButton.disabled = false;
+  };
+  const handlePeakStartChange = (e) => {
+    const theForm = document.getElementsByTagName("form")[0];
+    const fd = new FormData(theForm);
+    const templateVariables = Object.fromEntries(fd.entries())
+    
+    const peakStart = new Date(templateVariables["peak_start"]);
+    if(isFinite(peakStart)) {
+      const oneHourMs = 1000 * 60 * 60;
+      const tzOffset = 1000 * 60 * peakStart.getTimezoneOffset();
+      if(templateVariables["peak_end"] === "") {
+        const peakEndInput = document.getElementById("peak-end");
+        peakEndInput.valueAsNumber = peakStart - 1000 * 60 * peakStart.getTimezoneOffset()
+        peakEndInput.valueAsDate = new Date(peakStart.valueOf() + oneHourMs - tzOffset)
+      }
+      if(templateVariables["action_start"] === "") {
+        const actionStartInput = document.getElementById("action-start");
+        actionStartInput.valueAsDate = new Date(peakStart.valueOf() - oneHourMs - tzOffset)
+      }
+      if(templateVariables["action_end"] === "") {
+        const actionEndInput = document.getElementById("action-end");
+        actionEndInput.valueAsDate = new Date(peakStart.valueOf() + (2*oneHourMs) - tzOffset)
+      }
+    }
+
+    updatePreview();
+  };
+  const updatePreview = () => {
+    const theForm = document.getElementsByTagName("form")[0];
+    const fd = new FormData(theForm);
+    const templateVariables = Object.fromEntries(fd.entries())
+
+    const sendButton = document.getElementById("send-button");
+    const mapcRecipientDiv = document.getElementById("mapc-recipient");
+    if(templateVariables["recipients"] === "nobody") {
+      sendButton.disabled = true;
+      sendButton.textContent = 'Send "Likely Peak" Email';
+      mapcRecipientDiv.style.display = "none";
+    } else if(templateVariables["recipients"] === "internal") {
+      mapcRecipientDiv.style.display = "block";
+      if(templateVariables["mapc_recipient"] !== "") {
+        sendButton.textContent = `Send "Likely Peak" Email to ${templateVariables["mapc_recipient"]}@mapc.org`;
+        sendButton.disabled = false;
+      }
+    } else if(templateVariables["recipients"] === "list") {
+      sendButton.disabled = false;
+      sendButton.textContent = 'Send "Likely Peak" Email to Mailing List';
+      mapcRecipientDiv.style.display = "none";
+    }
+
+    if(Number(templateVariables["peak_value"])) {
+      templateVariables["peak_value_gw"] = `${templateVariables["peak_value"]} GW`;
+    } else {
+      templateVariables["peak_value_gw"] = "{{peak_value_gw}}";
+    }
+
+    const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    //const weekdayFormatter = new Intl.DateTimeFormat("en-US", { weekday: "long" });
+    const now = new Date();
+
+    const peakStart = new Date(templateVariables["peak_start"]);
+    if(isFinite(peakStart)) {
+      templateVariables["peak_start_hour"] = peakStart.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      if(peakStart.getFullYear() === now.getFullYear() && peakStart.getMonth() === now.getMonth() && peakStart.getDate() === now.getDate()) {
+        templateVariables["day_of_week"] = "today";
+        templateVariables["day_of_week_capitalized"] = "Today";
+      } else if(peakStart.getFullYear() === now.getFullYear() && 
+        ((peakStart.getMonth() === now.getMonth() && peakStart.getDate() === now.getDate() + 1)
+          || (peakStart.getMonth() === now.getMonth() + 1 && peakStart.getDate() === 0))) {
+        // i.e., tomorrow
+        templateVariables["day_of_week"] = "tomorrow";
+        templateVariables["day_of_week_capitalized"] = "Tomorrow";
+      } else {
+        templateVariables["day_of_week"] = weekdays[peakStart.getDay()];
+        templateVariables["day_of_week_capitalized"] = weekdays[peakStart.getDay()];
+      }
+    } else {
+      templateVariables["peak_start_hour"] = "{{peak_start_hour}}";
+      templateVariables["day_of_week"] = "{{day_of_week}}";
+      templateVariables["day_of_week_capitalized"] = "{{day_of_week_capitalized}}";
+    }
+
+    const peakEnd = new Date(templateVariables["peak_end"]);
+
+    if(isFinite(peakEnd)) {
+      templateVariables["peak_end_hour"] = peakEnd.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    } else {
+      templateVariables["peak_end_hour"] = "{{peak_end_hour}}";
+    }
+
+    const actionStart = new Date(templateVariables["action_start"]);
+    if(isFinite(actionStart)) {
+      templateVariables["action_start_hour"] = actionStart.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      if(actionStart.getFullYear() === now.getFullYear() && actionStart.getMonth() === now.getMonth() && actionStart.getDate() === now.getDate()) {
+        templateVariables["action_day_of_week"] = "today";
+      } else if(actionStart.getFullYear() === now.getFullYear() && 
+        ((actionStart.getMonth() === now.getMonth() && actionStart.getDate() === now.getDate() + 1)
+          || (actionStart.getMonth() === now.getMonth() + 1 && actionStart.getDate() === 0))) {
+        // i.e., tomorrow
+        templateVariables["action_day_of_week"] = "tomorrow";
+      } else {
+        templateVariables["action_day_of_week"] = `on ${weekdays[actionStart.getDay()]}`;
+      }
+    } else {
+      templateVariables["action_start_hour"] = "{{action_start_hour}}";
+      templateVariables["action_day_of_week"] = "{{action_day_of_week}}";
+    }
+
+    const actionEnd = new Date(templateVariables["action_end"]);
+    if(isFinite(actionEnd)) {
+      templateVariables["action_end_hour"] = actionEnd.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    } else {
+      templateVariables["action_end_hour"] = "{{action_end_hour}}";
+    }
+    
+    document.getElementById("preview-frame").setAttribute("srcdoc",template(templateVariables));
+    return templateVariables;
+  };
+  var template = Handlebars.compile(atob(`<%= @mailing_details[:template_body] %>`));
+  updatePreview();
+</script>
